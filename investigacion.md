@@ -28,6 +28,9 @@ A partir de una primera sesión de brainstorming, se plantean las siguientes lí
 
 Sistema de ajuste basado en un dial/ruleta que tensa uno o varios cables mediante un carrete interno. Es la tecnología usada en calzado deportivo, rodilleras, tobilleras, muñequeras y encajes protésicos comerciales.
 
+<img width="320" height="566" alt="image" src="https://github.com/user-attachments/assets/cb432f8d-d301-4ce4-9d7d-84b8f987d761" />
+
+
 ### Opinión / valoración
 
 Puntos a favor respecto a nuestros objetivos:
@@ -59,3 +62,6 @@ Para la integración con el FlexPendant: el lazo de control de corriente/tensió
 
 - [US9248040B2 — Motorized tensioning system for medical braces and devices (Boa Technology)](https://patents.google.com/patent/US9248040B2/en) — patente con el mecanismo de motor/embrague/control por corriente descrito arriba.
 - [The exoskeleton prototype including the Boa Closure System (ResearchGate)](https://www.researchgate.net/figure/The-exoskeleton-prototype-including-the-Boa-Closure-System_fig3_324040549) — ejemplo de sistema BOA aplicado directamente sobre un exoesqueleto.
+
+<img width="822" height="745" alt="image" src="https://github.com/user-attachments/assets/acf87d65-0747-4886-acf1-e2930d31d5ff" />
+
