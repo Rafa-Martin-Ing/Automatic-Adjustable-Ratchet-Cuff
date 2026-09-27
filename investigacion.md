@@ -164,3 +164,39 @@ Mecanismo tendón-driven con menos actuadores que grados de libertad. Un motor p
 - [Underactuated tendon-driven robotic/prosthetic hands: design issues (RSS)](https://www.roboticsproceedings.org/rss13/p19.pdf) — discusión de los trade-offs de diseño en manos tendón-driven underactuated.
 - [A Modular, Open-Source 3D Printed Underactuated Hand (Yale GrabLab)](https://www.eng.yale.edu/grablab/pubs/Ma_ICRA2013.pdf) — referencia práctica de diseño e impresión 3D de mecanismos tendón-driven underactuated.
 
+## Idea 4: Agarre tipo tentáculo (continuum tendón-driven)
+
+### Descripción
+
+Mecanismo continuo (no rígido) compuesto por segmentos pasivos ensartados y accionados por tendones, similar a un tentáculo o brazo de serpiente. En vez de abrazar el brazo desde fuera con una geometría fija (brazalete, dedos), el propio mecanismo puede enrollarse hasta **cerrar un lazo sobre sí mismo**, rodeando el brazo del paciente.
+
+<img width="277" height="396" alt="image" src="https://github.com/user-attachments/assets/31253e0d-17cc-4e9a-accb-8f0444b61646" />
+
+### Ventajas
+
+- Se adapta a geometrías variables (bíceps vs. antebrazo, brazo asimétrico) sin necesitar un diseño específico por zona, gracias a la naturaleza continua del mecanismo.
+- Mecánicamente simple en el concepto: segmentos pasivos + tendones + poleas/motores estándar, no requiere un módulo cerrado tipo BOA ni varias cámaras neumáticas con sus válvulas.
+- Doble función cierre + sujeción: al enrollarse y cerrar el lazo, el propio mecanismo actúa como agarre, con un área de contacto mucho mayor que un brazalete o unos dedos puntuales. Para una misma fuerza total de sujeción, esto supone menos presión por cm² sobre el tejido, lo cual es relevante para la seguridad del paciente.
+
+### Desventajas
+
+- El control es más complejo que en las otras ideas: normalmente se necesitan 3-4 tendones tirando de forma diferencial para curvar el tentáculo en la dirección correcta y cerrar el lazo, frente a un solo motor en el BOA o en la mano underactuated.
+- La fricción acumulada en las guías de cable a lo largo de muchos segmentos dificulta estimar la fuerza de cierre real solo a partir de la tensión del tendón, para el control de fuerza haría falta sensorización más distribuida, no un único punto.
+- El *quick release* es el punto más delicado de esta opción: aflojar los tendones no garantiza apertura instantánea si hay fricción/atasco acumulado en los segmentos. Necesitaría un mecanismo de apertura pasiva explícito (p. ej. muelles en cada articulación que dominen sobre los tendones al soltarse), a diferencia del pestillo mecánico directo de las otras ideas.
+- Más piezas mecánicas por segmento, lo que se traduce a más puntos de fallo y mantenimiento que un brazalete de una sola pieza.
+
+### Propuesta de aplicación / control
+
+1. **3-4 tendones** distribuidos alrededor del eje del tentáculo, anclados en la punta, guiados por cada segmento, cada uno con su propio motor/polea.
+2. Para "abrazar" el brazo no hace falta control de trayectoria fino como en un brazo continuum de manipulación general: basta con una secuencia de tracción de un subconjunto de tendones que curve el tentáculo hasta rodear el brazo y cerrar el lazo, deteniéndose por corriente de motor o contacto detectado en la punta.
+3. **Sensor de fuerza/contacto en la punta** (donde el tentáculo se cierra sobre sí mismo o sobre el brazo) para confirmar que el lazo se ha cerrado con la tensión adecuada, más sensores de presión distribuidos en varios segmentos, ya que aquí el área de contacto es mayor y un solo punto de medida no sería representativo.
+4. **Quick release**: muelles de apertura pasiva en cada articulación que dominen sobre la tensión de los tendones al soltarse, este mecanismo habría que validarlo específicamente en el prototipo, porque es el riesgo principal de esta opción frente a las demás.
+
+<img width="798" height="372" alt="image" src="https://github.com/user-attachments/assets/45944673-5ac2-45a3-aefb-346f0ed042b9" />
+
+### Referencias
+
+- [Continuum Robot Arms Inspired by Cephalopods (Ian Walker, SPIE)](https://iwalker.people.clemson.edu/spie05.pdf) — referencia clásica de brazos continuum inspirados en tentáculos de cefalópodos, incluyendo el concepto de *whole-arm grasping* (agarre con el brazo entero, no solo la punta).
+- [A ball-jointed tendon-driven continuum robot with multi-directional operability for grasping objects (ROBOMECH Journal)](https://robomechjournal.springeropen.com/articles/10.1186/s40648-024-00272-4) — diseño reciente de continuum tendón-driven orientado específicamente a agarre.
+- [Snake-arm robot (Wikipedia)](https://en.wikipedia.org/wiki/Snake-arm_robot) — contexto general de la familia de mecanismos tipo serpiente/tentáculo.
+- [Design of a Tendon Driven Soft Continuum Robotic Arm (tesis, URI)](https://digitalcommons.uri.edu/cgi/viewcontent.cgi?article=2267&context=theses) — detalle de diseño e implementación de un brazo continuum tendón-driven, útil como referencia de construcción práctica.
