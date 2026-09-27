@@ -128,3 +128,39 @@ Cada dedo con su propia línea de aire y válvula proporcional (o electroválvul
 - [Decoupled, wearable soft robotic rehabilitation device for the upper limb (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC12441639/) — dispositivo blando neumático wearable aplicado a rehabilitación de miembro superior.
 - [A Soft Robotic Gripper With an Active Palm and Reconfigurable Fingers for Fully Dexterous In-Hand Manipulation (HAL / IEEE RAL, Pagoli et al.)](https://uca.hal.science/hal-03583792v1/document) — paper del que sale el concepto de dedos blandos con endoesqueleto rígido, piel inflable y palma activa.
 
+## Idea 3: Manos / brazos "underactuated"
+
+### Descripción
+
+Mecanismo tendón-driven con menos actuadores que grados de libertad. Un motor principal tensa uno o varios tendones que cierran 2-3 "dedos"/pétalos alrededor del brazo, cada uno adaptándose de forma pasiva al contorno hasta hacer contacto. Un segundo servo controla un mecanismo de leva (*cam lock*) que bloquea mecánicamente la posición de cierre sin necesidad de mantener el motor principal energizado.
+
+<img width="485" height="402" alt="image" src="https://github.com/user-attachments/assets/cdf8cc7c-fa4a-41c6-acc6-a3e5e564a304" />
+
+### Ventajas
+
+- Un solo actuador de cierre mueve varios dedos/pétalos, que se adaptan de forma pasiva al contorno del brazo, no hace falta sensorizar ni controlar cada dedo por separado para saber cuándo parar.
+- El *cam lock* mantiene el agarre bloqueado mecánicamente sin gasto energético continuo, relevante para sesiones de rehabilitación largas.
+- La arquitectura separa de fábrica el cierre (main drive servo) del bloqueo/liberación (lock servo + cam lock), cumpliendo el requisito de que el *quick release* sea mecánicamente independiente del cierre automático.
+- Mecánicamente más simple y barato de fabricar/reparar en el propio laboratorio que un módulo BOA cerrado o un sistema neumático multi-cámara (tendones, poleas y levas son piezas convencionales).
+
+### Desventajas
+
+- La adaptación pasiva reparte la tensión de un mismo tendón entre todos los dedos/pétalos: si el brazo no es simétrico  un pétalo puede recibir más presión que otro.
+- No hay realimentación de fuerza intrínseca al mecanismo, ni la corriente del motor principal ni el estado del cam lock indican la presión real ejercida sobre el tejido.
+- La geometría de "dedos" en Y de la referencia está pensada para agarrar objetos pequeños/rígidos, no para envolver cómodamente un miembro humano. Requeriría rediseñar los dedos como arcos más anchos, forrados de material blando en la cara de contacto.
+
+### Propuesta de aplicación / control
+
+1. **Main drive servo + polea**: tensa el tendón principal, cerrando los 2-3 dedos/pétalos alrededor del brazo hasta detectar par de contacto (vía corriente del motor, igual que en la idea del BOA).
+2. **Lock servo + cam lock**: una vez alcanzada la tensión objetivo, bloquea mecánicamente la posición de los tendones, el motor principal puede desenergizarse sin perder el agarre.
+3. **Quick release**: el lock servo retrae la leva, liberando la tensión de los tendones de forma instantánea.
+4. **Sensorización añadida**: sensor de presión de contacto en la cara interior de cada dedo, necesario porque el sistema tendón + leva no da por sí solo información de la fuerza real sobre el tejido.
+
+<img width="715" height="467" alt="image" src="https://github.com/user-attachments/assets/e8197a32-3379-4bd7-9191-a61e9e784b3f" />
+
+### Referencias
+
+- [Combining underactuation with vacuum grasping for improved robotic grippers (Maggi, Mantriota & Reina — ScienceDirect)](https://www.sciencedirect.com/science/article/pii/S095741582400076X) — gripper underactuado de 3-GDL con cadena de mecanismos de cuatro barras y muelles rotacionales para adaptación pasiva a la geometría del objeto.
+- [Underactuated tendon-driven robotic/prosthetic hands: design issues (RSS)](https://www.roboticsproceedings.org/rss13/p19.pdf) — discusión de los trade-offs de diseño en manos tendón-driven underactuated.
+- [A Modular, Open-Source 3D Printed Underactuated Hand (Yale GrabLab)](https://www.eng.yale.edu/grablab/pubs/Ma_ICRA2013.pdf) — referencia práctica de diseño e impresión 3D de mecanismos tendón-driven underactuated.
+
