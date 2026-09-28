@@ -1,4 +1,4 @@
-## Objetivo del trabajo
+ ## Objetivo del trabajo
 
 El objetivo de este trabajo es diseñar e implementar un sistema de agarre ajustable y automatizado que permita la conexión humano-robot en el contexto de la rehabilitación física. El agarre debe adaptarse a diferentes partes del brazo del paciente (bíceps, antebrazo, muñeca...) para facilitar los procesos de terapia asistida mediante los robots KUKA, especialmente en pacientes con movilidad reducida que no puedan sujetarse al robot por sí mismos.
 
@@ -200,3 +200,88 @@ Mecanismo continuo (no rígido) compuesto por segmentos pasivos ensartados y acc
 - [A ball-jointed tendon-driven continuum robot with multi-directional operability for grasping objects (ROBOMECH Journal)](https://robomechjournal.springeropen.com/articles/10.1186/s40648-024-00272-4) — diseño reciente de continuum tendón-driven orientado específicamente a agarre.
 - [Snake-arm robot (Wikipedia)](https://en.wikipedia.org/wiki/Snake-arm_robot) — contexto general de la familia de mecanismos tipo serpiente/tentáculo.
 - [Design of a Tendon Driven Soft Continuum Robotic Arm (tesis, URI)](https://digitalcommons.uri.edu/cgi/viewcontent.cgi?article=2267&context=theses) — detalle de diseño e implementación de un brazo continuum tendón-driven, útil como referencia de construcción práctica.
+
+## Idea 5: Mano de carraca (rack-and-pawl motorizado)
+
+Mecanismo con una pala fija y una pala móvil, sujeta mediante un sistema de carraca (trinquete + dentado) que permite avanzar pero no retroceder, hasta que se activa un *quick release*. Incluye dos botones: uno de ajuste manual (además del cierre automático) y otro de liberación rápida. Se plantean dos variantes de la misma idea según cómo se mueve la pala.
+
+---
+
+### 5a. Variante lineal (cremallera)
+
+<img width="500" height="500" alt="image" src="https://github.com/user-attachments/assets/2ff745a1-e2f5-4e12-bd76-09362f19a93e" />
+
+#### Descripción
+
+La pala móvil desliza sobre un carril dentado (cremallera) recto o curvo. Un trinquete de avance, accionado por un motor, la empuja diente a diente; un segundo trinquete, independiente, impide el retroceso salvo que se libere activamente. Es el mismo principio que usan las abrazaderas de carpintería de gatillo tipo "Quick-Grip", motorizando el gatillo.
+
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/e2f591e8-f480-4d14-9fa6-670f5099774c" />
+
+#### Ventajas
+
+- Mecanismo mecánicamente simple y muy replicable: cremallera + trinquete, piezas fáciles de diseñar en OnShape y fabricar.
+- Ajuste manual (avanza el trinquete motor) y quick release (desengancha el trinquete de retención) son dos acciones mecánicas distintas sobre el mismo carril.
+- Resolución de cierre discreta y predecible (diente a diente).
+
+#### Desventajas
+
+- Solo una pala es móvil, así que la adaptación a la forma del brazo es peor que en el brazalete neumático o el tentáculo — funciona bien en secciones ovaladas/circulares, no tanto en un brazo muy asimétrico.
+- Resolución limitada por el paso del diente: más fino da más precisión pero cada diente aguanta menos carga.
+- El trinquete no mide fuerza por sí mismo — sigue haciendo falta sensor de presión de contacto.
+
+#### Propuesta de aplicación / control
+
+1. Cremallera fija a la pala móvil, dientes con flanco trasero autobloqueante.
+2. Avance accionado por motorreductor, empuja la cremallera diente a diente y trinquete de retención independiente, con muelle, impide el retroceso en todo momento salvo liberación activa.
+3. Cierre automático: el motor avanza hasta detectar par de contacto (corriente del motor).
+4. Botón 1: Ajuste manual: avanza el trinquete un paso (o de forma continua mientras se mantiene pulsado), independiente de la secuencia automática.
+5. Botón 2: Quick release: acciona un servo/solenoide que levanta el trinquete de retención, liberando la pala. Se recomienda añadir también una palanca de liberación mecánica pura, sin electrónica, como respaldo fail-safe.
+
+#### Referencias
+
+- [Bar clamp having a ratchet mechanism for fastening a clamped work piece (US9144890)](https://patents.google.com/patent/US9144890) — mecanismo real más parecido: carril dentado + trinquete de avance + liberación independiente.
+- [Pawl Mechanism Explained: self-locking geometry (Firgelli)](https://www.firgelliauto.com/blogs/mechanisms/pawl) — detalle técnico del ángulo de flanco del diente que hace el sistema autobloqueante.
+
+---
+
+### 5b. Variante rotativa (carraca en el pivote)
+
+#### Descripción
+
+La rueda dentada de la carraca está integrada en el propio pivote donde se unen las dos palas (como en el boceto), y es la pala móvil la que gira alrededor de ese eje central, en vez de deslizar en línea recta. Mismo par avance-retención que la variante lineal, pero en coordenadas angulares.
+
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/82622f44-5552-434f-b491-f0cc281a6534" />
+
+#### Ventajas
+
+- Forma de agarre más envolvente, tipo mano/gancho en "U", en vez de pinza, geometría más natural para rodear un miembro.
+- Mecanismo más compacto: la rueda dentada y ambos trinquetes se concentran en el pivote, en vez de necesitar un carril largo.
+- Ya existe precedente directo en dispositivos médicos reales: bisagras ortopédicas de rodilla y codo usan exactamente este principio en contacto con el cuerpo humano, lo cual reduce el riesgo de estar usando un mecanismo no probado en un contexto clínico.
+
+#### Desventajas
+
+- Geometría de diseño algo más compleja que una cremallera recta (rueda dentada circular, posicionamiento del pivote).
+- El rango de apertura está limitado por el ángulo de giro disponible en el pivote, a diferencia del recorrido lineal que puede alargarse fácilmente.
+- Igual que en la variante lineal, no hay medición de fuerza intrínseca.
+
+#### Propuesta de aplicación / control
+
+Igual que en 5a, pero sustituyendo la cremallera lineal por una rueda dentada circular en el pivote: trinquete de avance motorizado con retención independiente, mismos dos botones (ajuste manual y quick release), y recomendación de una liberación mecánica de respaldo sin electrónica.
+
+#### Referencias
+
+- [Ratchet hinge for a knee or elbow orthosis (US7984531B2)](https://patents.google.com/patent/US7984531B2/en) — bisagra ortopédica real con un pasador de resorte que engancha dientes de carraca alrededor del pivote, liberado por palanca.
+- [The Point Digit II: Mechanical Design and Testing of a Ratcheting Prosthetic Finger (PMC — acceso abierto)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7980476/) — prótesis de dedo con mecanismo de carraca (11 posiciones de flexión), liberación por botón de autobloqueo o por resorte al llegar a flexión máxima; validado mecánicamente con más de 260.000 ciclos sin fallo y cargas muy superiores a la especificación (1.370 N en la punta del dedo).
+
+---
+
+### Comparación 5a vs. 5b
+
+| | 5a. Lineal (cremallera) | 5b. Rotativa (carraca en pivote) |
+|---|---|---|
+| Movimiento de la pala | Traslación a lo largo de un carril | Rotación alrededor de un eje fijo |
+| Forma resultante del agarre | Más tipo "pinza" | Más tipo "gancho/mano" envolvente |
+| Precedente real | Abrazaderas de carpintería tipo Quick-Grip | Bisagras ortopédicas de rodilla/codo, ya usadas sobre el cuerpo humano |
+| Complejidad mecánica | Cremallera + trinquetes a lo largo de un carril | Rueda dentada + trinquetes, concentrados en el pivote (más compacto) |
+| Rango de ajuste | Fácil de alargar (carril más largo) | Limitado por el ángulo de giro disponible |
+| Adaptación a formas asimétricas | Moderada | Moderada, algo mejor por geometría envolvente |
