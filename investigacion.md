@@ -236,6 +236,7 @@ La pala móvil desliza sobre un carril dentado (cremallera) recto o curvo. Un tr
 3. Cierre automático: el motor avanza hasta detectar par de contacto (corriente del motor).
 4. Botón 1: Ajuste manual: avanza el trinquete un paso (o de forma continua mientras se mantiene pulsado), independiente de la secuencia automática.
 5. Botón 2: Quick release: acciona un servo/solenoide que levanta el trinquete de retención, liberando la pala. Se recomienda añadir también una palanca de liberación mecánica pura, sin electrónica, como respaldo fail-safe.
+6. Las partes de contacto con el brazo (la cara interior de ambas palas) se pueden diseñar como piezas extraíbles e intercambiables, ancladas por encaje o pequeños tornillos, de forma que puedan sustituirse por insertos de distinto tamaño/curvatura según el diámetro del brazo del paciente, sin necesidad de cambiar el mecanismo de carraca completo.
 
 #### Referencias
 
