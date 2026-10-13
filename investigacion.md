@@ -286,3 +286,42 @@ Igual que en 5a, pero sustituyendo la cremallera lineal por una rueda dentada ci
 | Complejidad mecánica | Cremallera + trinquetes a lo largo de un carril | Rueda dentada + trinquetes, concentrados en el pivote (más compacto) |
 | Rango de ajuste | Fácil de alargar (carril más largo) | Limitado por el ángulo de giro disponible |
 | Adaptación a formas asimétricas | Moderada | Moderada, algo mejor por geometría envolvente |
+
+## Solución adoptada: carraca rotativa en el pivote (5b)
+
+<img width="900" alt="Simulación del mecanismo" src="docs/simulacion-carraca-5b.png" />
+
+#### Descripción
+
+Hemos elegido la variante rotativa (5b). La pala móvil gira alrededor de un pivote fijo, y la rueda dentada de la carraca va integrada en ese mismo eje. El conjunto se monta en la brida del KUKA LBR iiwa (patrón ISO 9409-1-50-7-M6) y sujeta el antebrazo desde el lateral, dejando libres el codo, la muñeca y la mano para los ejercicios.
+
+El diseño final lleva dos conjuntos de palas iguales, uno al lado del otro a lo largo del antebrazo y sobre el mismo eje de pivote. Así hay 4 puntos de apoyo con un solo motor, una sola carraca y un solo quick release.
+
+#### Componentes
+
+- **Pala fija y pala móvil**, con acolchado en la zona de contacto. El antebrazo entra por el lateral y se apoya en la pala fija.
+- **Rueda de carraca y trinquete de retención**, en el pivote. El trinquete lleva un muelle que lo mantiene enganchado: deja cerrar y bloquea la apertura.
+- **Motor DC con reductor**, que mueve un sector dentado solidario a la pala móvil a través de un piñón.
+- **Rueda libre (embrague unidireccional) en el piñón**. Transmite el giro del motor en el sentido de cierre y patina en el de apertura, así que el motor nunca frena la apertura, aunque su reductor no sea reversible.
+- **Muelle de torsión en el pivote**, que abre la pala cuando se libera el trinquete.
+- **Palanca de quick release**, una pieza única con el trinquete. Al accionarla, levanta el trinquete directamente.
+- **Actuador del botón Abrir**: un pequeño solenoide o servo que empuja la misma palanca. No hay un segundo mecanismo de apertura, solo una segunda forma de mover el mismo.
+- **Controlador y botones** (Cerrar, ajuste +, Abrir), en la carcasa junto al pivote.
+
+#### Funcionamiento
+
+1. **Cierre:** el motor gira la pala a través de la rueda libre y el trinquete salta diente a diente. El controlador para el motor en el primer diente que asegura la fuerza de apriete objetivo.
+2. **Ajuste (+):** el motor avanza un diente más, sin superar un límite máximo de apriete.
+3. **Retención:** con el motor apagado, solo el trinquete sujeta la pala. Si se corta la alimentación, el agarre sigue cerrado.
+4. **Apertura por botón:** el actuador levanta el trinquete y el muelle abre la pala. La rueda libre patina, así que el motor se queda quieto.
+5. **Quick release mecánico:** la palanca levanta el trinquete a mano, sin pasar por la electrónica. Funciona con la alimentación cortada.
+
+#### Seguridad
+
+- La retención y la liberación de emergencia son puramente mecánicas y no dependen de que el controlador funcione.
+- Un microinterruptor en la palanca corta el motor. La rueda libre transmite en sentido de cierre, así que si el motor siguiera cerrando mientras se tira de la palanca, la pala no podría abrirse.
+- El controlador limita la fuerza máxima de apriete cortando el motor por corriente. Para medir la presión real sobre el antebrazo sigue haciendo falta un sensor de contacto, porque los sensores de par del iiwa no la ven.
+
+#### Simulación
+
+Hemos hecho una [simulación interactiva](https://dazzling-liger-b6d289.netlify.app) para ilustrar el funcionamiento: cierre, ajuste, retención sin alimentación, apertura por botón y quick release. **No es el prototipo.** Es un esquema 2D, en sección del antebrazo y sin escala, y el paso de la carraca y los valores de fuerza son ilustrativos. Muestra un solo conjunto de palas; el diseño final duplica este conjunto a lo largo del antebrazo sobre el mismo eje.
