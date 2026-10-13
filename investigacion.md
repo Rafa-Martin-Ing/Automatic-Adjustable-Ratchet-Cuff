@@ -289,7 +289,8 @@ Igual que en 5a, pero sustituyendo la cremallera lineal por una rueda dentada ci
 
 ## Solución adoptada: carraca rotativa en el pivote (5b)
 
-<img width="900" alt="Simulación del mecanismo" src="docs/simulacion-carraca-5b.png" />
+<img width="1400" height="900" alt="image" src="https://github.com/user-attachments/assets/8a6ae6fe-d736-4b0d-90cb-01bf7730a551" />
+<img width="1400" height="900" alt="image" src="https://github.com/user-attachments/assets/040ed9e3-9148-4226-b0e7-4d296669c02c" />
 
 #### Descripción
 
